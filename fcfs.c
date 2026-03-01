@@ -35,20 +35,6 @@ int main() {
         currentTime += bt[i];
     }
 
-    // Print Waiting Times
-    printf("Waiting Time:");
-    for (int i = 0; i < n; i++) {
-        printf(" P%d %d", pid[i], wt[i]);
-    }
-    printf("\n");
-
-    // Print Turnaround Times
-    printf("Turnaround Time:");
-    for (int i = 0; i < n; i++) {
-        printf(" P%d %d", pid[i], tat[i]);
-    }
-    printf("\n");
-
     // Compute averages
     double avgWT = 0, avgTAT = 0;
     for (int i = 0; i < n; i++) {
@@ -58,8 +44,12 @@ int main() {
     avgWT  /= n;
     avgTAT /= n;
 
-    printf("Average Waiting Time: %.2f\n", avgWT);
-    printf("Average Turnaround Time: %.2f\n", avgTAT);
+    // Print all on one line (exact format required)
+    printf("Waiting Time:");
+    for (int i = 0; i < n; i++) printf(" P%d %d", pid[i], wt[i]);
+    printf(" Turnaround Time:");
+    for (int i = 0; i < n; i++) printf(" P%d %d", pid[i], tat[i]);
+    printf(" Average Waiting Time: %.2f Average Turnaround Time: %.2f\n", avgWT, avgTAT);
 
     return 0;
 }
