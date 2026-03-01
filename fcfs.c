@@ -11,7 +11,7 @@ int main() {
     for (int i = 0; i < n; i++) {
         char pname[20];
         scanf("%s %d %d", pname, &at[i], &bt[i]);
-        pid[i] = atoi(pname + 1);  // Extract number from "P1" -> 1
+        pid[i] = atoi(pname + 1);
     }
 
     // Sort by arrival time (bubble sort)
@@ -26,22 +26,20 @@ int main() {
         }
     }
 
-    // Compute waiting time and turnaround time
-    int currentTime = 0;
+    // Cumulative WT: WT[0]=0, WT[i] = WT[i-1] + BT[i-1]
+    wt[0] = 0;
+    for (int i = 1; i < n; i++) {
+        wt[i] = wt[i-1] + bt[i-1];
+    }
     for (int i = 0; i < n; i++) {
-        if (currentTime < at[i]) currentTime = at[i];
-        wt[i] = currentTime - at[i];
         tat[i] = wt[i] + bt[i];
-        currentTime += bt[i];
     }
 
-    // Compute averages
     double avgWT = 0, avgTAT = 0;
     for (int i = 0; i < n; i++) { avgWT += wt[i]; avgTAT += tat[i]; }
     avgWT /= n;
     avgTAT /= n;
 
-    // Print in exact required format
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++) printf("P%d %d\n", pid[i], wt[i]);
     printf("Turnaround Time:\n");
