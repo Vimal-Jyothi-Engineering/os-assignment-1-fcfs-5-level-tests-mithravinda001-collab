@@ -44,12 +44,13 @@ int main() {
     avgWT  /= n;
     avgTAT /= n;
 
-    // Print all on one line (exact format required)
-    printf("Waiting Time:");
-    for (int i = 0; i < n; i++) printf(" P%d %d", pid[i], wt[i]);
-    printf(" Turnaround Time:");
-    for (int i = 0; i < n; i++) printf(" P%d %d", pid[i], tat[i]);
-    printf(" Average Waiting Time: %.2f Average Turnaround Time: %.2f\n", avgWT, avgTAT);
+    // Print in exact required format
+    printf("Waiting Time:\n");
+    for (int i = 0; i < n; i++) printf("P%d %d\n", pid[i], wt[i]);
+    printf("Turnaround Time:\n");
+    for (int i = 0; i < n; i++) printf("P%d %d\n", pid[i], tat[i]);
+    printf("Average Waiting Time: %.2f\n", avgWT);
+    printf("Average Turnaround Time: %.2f\n", avgTAT);
 
     return 0;
 }
