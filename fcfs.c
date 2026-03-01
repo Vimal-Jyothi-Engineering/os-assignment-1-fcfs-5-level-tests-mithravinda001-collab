@@ -9,7 +9,9 @@ int main() {
     int wt[100], tat[100];
 
     for (int i = 0; i < n; i++) {
-        scanf("%d %d %d", &pid[i], &at[i], &bt[i]);
+        char pname[20];
+        scanf("%s %d %d", pname, &at[i], &bt[i]);
+        pid[i] = atoi(pname + 1);  // Extract number from "P1" -> 1
     }
 
     // Sort by arrival time (bubble sort)
@@ -27,9 +29,7 @@ int main() {
     // Compute waiting time and turnaround time
     int currentTime = 0;
     for (int i = 0; i < n; i++) {
-        if (currentTime < at[i]) {
-            currentTime = at[i];
-        }
+        if (currentTime < at[i]) currentTime = at[i];
         wt[i] = currentTime - at[i];
         tat[i] = wt[i] + bt[i];
         currentTime += bt[i];
@@ -37,11 +37,8 @@ int main() {
 
     // Compute averages
     double avgWT = 0, avgTAT = 0;
-    for (int i = 0; i < n; i++) {
-        avgWT  += wt[i];
-        avgTAT += tat[i];
-    }
-    avgWT  /= n;
+    for (int i = 0; i < n; i++) { avgWT += wt[i]; avgTAT += tat[i]; }
+    avgWT /= n;
     avgTAT /= n;
 
     // Print in exact required format
