@@ -1,90 +1,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Structure to hold process information
 typedef struct {
     int pid;
-    int arrival_time;
-    int burst_time;
-    int waiting_time;
-    int turnaround_time;
-    int completion_time;
+    int arrival;
+    int burst;
+    int waiting;
+    int turnaround;
 } Process;
-
-// Function to sort processes by arrival time (and by PID if arrival times are equal)
-void sort_by_arrival_time(Process p[], int n) {
-    Process temp;
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            // Sort by arrival time, if equal, sort by PID
-            if (p[j].arrival_time > p[j + 1].arrival_time || 
-                (p[j].arrival_time == p[j + 1].arrival_time && p[j].pid > p[j + 1].pid)) {
-                temp = p[j];
-                p[j] = p[j + 1];
-                p[j + 1] = temp;
-            }
-        }
-    }
-}
 
 int main() {
     int n;
-    
-    // Read number of processes
     scanf("%d", &n);
     
-    Process *p = (Process *)malloc(n * sizeof(Process));
+    Process p[1000];
     
-    // Read PID, arrival time, and burst time for each process
-    for (int i = 0; i < n; i++) {
-        scanf("%d %d %d", &p[i].pid, &p[i].arrival_time, &p[i].burst_time);
+    // Read input
+    for(int i = 0; i < n; i++) {
+        scanf("%d %d %d", &p[i].pid, &p[i].arrival, &p[i].burst);
     }
     
-    // Sort processes by arrival time
-    sort_by_arrival_time(p, n);
+    // Sort by arrival time (bubble sort)
+    for(int i = 0; i < n - 1; i++) {
+        for(int j = 0; j < n - i - 1; j++) {
+            if(p[j].arrival > p[j+1].arrival) {
+                Process temp = p[j];
+                p[j] = p[j+1];
+                p[j+1] = temp;
+            }
+        }
+    }
     
-    // Calculate completion time, turnaround time, and waiting time
+    // Calculate times
     int current_time = 0;
     float total_wt = 0, total_tat = 0;
     
-    for (int i = 0; i < n; i++) {
-        // If current time is less than arrival time, CPU is idle
-        if (current_time < p[i].arrival_time) {
-            current_time = p[i].arrival_time;
+    for(int i = 0; i < n; i++) {
+        // Handle CPU idle time
+        if(current_time < p[i].arrival) {
+            current_time = p[i].arrival;
         }
         
-        // Completion time
-        p[i].completion_time = current_time + p[i].burst_time;
+        int completion = current_time + p[i].burst;
+        p[i].turnaround = completion - p[i].arrival;
+        p[i].waiting = p[i].turnaround - p[i].burst;
         
-        // Turnaround time = Completion time - Arrival time
-        p[i].turnaround_time = p[i].completion_time - p[i].arrival_time;
-        
-        // Waiting time = Turnaround time - Burst time
-        p[i].waiting_time = p[i].turnaround_time - p[i].burst_time;
-        
-        // Update current time and totals
-        current_time = p[i].completion_time;
-        total_wt += p[i].waiting_time;
-        total_tat += p[i].turnaround_time;
+        current_time = completion;
+        total_wt += p[i].waiting;
+        total_tat += p[i].turnaround;
     }
     
-    // Calculate averages
-    float avg_wt = total_wt / n;
-    float avg_tat = total_tat / n;
-    
-    // Print output in EXACT format required
+    // Print EXACT format required
     printf("Waiting Time: ");
-    for (int i = 0; i < n; i++) {
-        printf("P%d %d ", p[i].pid, p[i].waiting_time);
+    for(int i = 0; i < n; i++) {
+        printf("P%d %d ", p[i].pid, p[i].waiting);
     }
     
     printf("Turnaround Time: ");
-    for (int i = 0; i < n; i++) {
-        printf("P%d %d ", p[i].pid, p[i].turnaround_time);
+    for(int i = 0; i < n; i++) {
+        printf("P%d %d ", p[i].pid, p[i].turnaround);
     }
     
-    printf("Average Waiting Time: %.2f Average Turnaround Time: %.2f\n", avg_wt, avg_tat);
+    printf("Average Waiting Time: %.2f Average Turnaround Time: %.2f\n", 
+           total_wt / n, total_tat / n);
     
-    free(p);
     return 0;
 }
